@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="eo_ecommerce.variant_generator.class">Eo\EcommerceBundle\Generator\VariantGenerator</parameter>
+        <parameter key="eo_ecommerce.doctrine_listener.class">Eo\EcommerceBundle\EventListener\DoctrineListener</parameter>
+        <parameter key="eo_ecommerce.price_resolver.class">Eo\EcommerceBundle\Resolver\PriceResolver</parameter>
+        <parameter key="eo_ecommerce.order_builder.class">Eo\EcommerceBundle\Builder\OrderBuilder</parameter>
+    </parameters>
+
+    <services>
+        <!-- Variant Generator -->
+        <service id="eo_ecommerce.variant_generator" class="%eo_ecommerce.variant_generator.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+        <!-- Doctrine Listener -->
+        <service id="eo_ecommerce.doctrine_listener" class="%eo_ecommerce.doctrine_listener.class%" public="false">
+            <argument type="service" id="eo_ecommerce.variant_generator"/>
+            <tag name="doctrine_mongodb.odm.event_listener" event="prePersist" />
+        </service>
+        <!-- Price Resolver -->
+        <service id="eo_ecommerce.price_resolver" class="%eo_ecommerce.price_resolver.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+        <!-- Order Builder -->
+        <service id="eo_ecommerce.order_builder" class="%eo_ecommerce.order_builder.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+    </services>
+</container>

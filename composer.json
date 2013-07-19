@@ -1,0 +1,32 @@
+{
+    "name":         "eo/ecommerce-bundle",
+    "type":         "symfony-bundle",
+    "description":  "A lightweight yet flexible ecommerce bundle based on Sylius and Spree",
+    "keywords":     ["ecommerce", "product", "price", "order", "variant", "stock", "inventory"],
+    "homepage":     "https://github.com/eymengunay/EoEcommerceBundle",
+    "license":      "MIT",
+    "authors": [
+        {
+            "name": "Eymen Gunay",
+            "email": "eymen@egunay.com"
+        }
+    ],
+    "require": {
+        "symfony/symfony": ">=2.1,<2.4-dev",
+        "doctrine/mongodb-odm-bundle": ">=2.1.0-dev"
+    },
+    "require-dev": {
+        "eo/symfony-test-edition": "dev-master"
+    },
+    "target-dir": "Eo/EcommerceBundle",
+    "autoload": {
+        "psr-0": {
+            "Eo\\EcommerceBundle": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
