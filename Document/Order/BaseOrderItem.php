@@ -11,6 +11,7 @@
 
 namespace Eo\EcommerceBundle\Document\Order;
 
+use \DateTime;
 use Eo\EcommerceBundle\Document\Product\ProductInterface;
 use Eo\EcommerceBundle\Document\Price\PriceInterface;
 use Eo\EcommerceBundle\Document\Variant\VariantInterface;
@@ -70,8 +71,23 @@ class BaseOrderItem implements OrderItemInterface
      */
     protected $total;
 
+    /**
+     * Creation time.
+     *
+     * @ODM\Date
+     */
+    protected $createdAt;
+
+    /**
+     * Modification time.
+     *
+     * @ODM\Date
+     */
+    protected $updatedAt;
+
     public function __construct()
     {
+        $this->createdAt = new DateTime();
         $this->quantity = 0;
         $this->unitPrice = 0;
         $this->total = 0;
@@ -240,5 +256,39 @@ class BaseOrderItem implements OrderItemInterface
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreatedAt(DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUpdatedAt(DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }
