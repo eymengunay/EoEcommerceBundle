@@ -41,8 +41,7 @@ class BaseOrder implements OrderInterface
     /**
      * @var collection $items
      *
-     * @ODM\EmbedMany(strategy="set")
-     * @ODM\Index
+     * @ODM\ReferenceMany(mappedBy="order")
      */
     protected $items;
 

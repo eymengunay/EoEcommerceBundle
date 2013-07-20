@@ -14,6 +14,7 @@ namespace Eo\EcommerceBundle\Document\Order;
 use Eo\EcommerceBundle\Document\Product\ProductInterface;
 use Eo\EcommerceBundle\Document\Price\PriceInterface;
 use Eo\EcommerceBundle\Document\Variant\VariantInterface;
+use Eo\EcommerceBundle\Document\Order\OrderInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -38,6 +39,11 @@ class BaseOrderItem implements OrderItemInterface
      * @ODM\ReferenceOne
      */
     protected $product;
+
+    /**
+     * @ODM\ReferenceOne(inversedBy="items")
+     */
+    protected $order;
 
     /**
      * @ODM\ReferenceOne
@@ -127,6 +133,23 @@ class BaseOrderItem implements OrderItemInterface
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOrder(OrderInterface $order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 
     /**

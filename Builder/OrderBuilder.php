@@ -16,6 +16,8 @@ use Eo\EcommerceBundle\Document\Price\EmbeddedPrice;
 use Eo\EcommerceBundle\Document\Price\EmbeddedPriceInterface;
 use Eo\EcommerceBundle\Document\Price\PriceInterface;
 use Eo\EcommerceBundle\Document\Product\ProductInterface;
+use Eo\EcommerceBundle\Document\Order\OrderInterface;
+use Eo\EcommerceBundle\Document\Order\OrderItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OrderBuilder implements OrderBuilderInterface
@@ -137,7 +139,7 @@ class OrderBuilder implements OrderBuilderInterface
 	 * @param OrderInterface $order
 	 * @param bool           $flush
 	 */
-	public function save($order, $flush = false)
+	public function save(OrderInterface $order, $flush = false)
 	{
 		$dm = $this->getDocumentManager();
 		$dm->persist($order);
@@ -145,4 +147,21 @@ class OrderBuilder implements OrderBuilderInterface
 			$dm->flush(null, array('safe' => true));
 		}
 	}
+
+    /**
+     * Save orderItem
+     *
+     * @param ItemInterface  $item
+     * @param OrderInterface $order
+     * @param bool           $flush
+     */
+    public function saveItem(OrderItemInterface $item, OrderInterface $order, $flush = false)
+    {
+        $dm = $this->getDocumentManager();
+        $item->setOrder($order);
+        $dm->persist($item);
+        if ($flush) {
+            $dm->flush(null, array('safe' => true));
+        }
+    }
 }
