@@ -94,6 +94,14 @@ class BaseOrderItem implements OrderItemInterface
     }
 
     /**
+     * @ODM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->calculateTotal();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function calculateTotal()
