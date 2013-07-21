@@ -164,6 +164,7 @@ class BaseOrderItem implements OrderItemInterface
      */
     public function setOrder(OrderInterface $order)
     {
+        $order->addItem($this);
         $this->order = $order;
         return $this;
     }
