@@ -199,6 +199,7 @@ class BaseOrderItem implements OrderItemInterface
     public function setPrice(PriceInterface $price)
     {
         $this->price = $price;
+        $this->setUnitPrice($price->getPrice());
         return $this;
     }
 
@@ -242,10 +243,6 @@ class BaseOrderItem implements OrderItemInterface
      */
     public function getUnitPrice()
     {
-        if ($price = $this->getPrice()) {
-            return $price->getPrice();
-        }
-
         return $this->unitPrice;
     }
 
