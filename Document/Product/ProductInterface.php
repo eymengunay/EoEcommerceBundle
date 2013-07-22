@@ -69,7 +69,7 @@ interface ProductInterface
      * @param PriceInterface $price
      * @return self
      */
-    public function setPrice(PriceInterface $price);
+    public function setPrice(PriceInterface $price = null);
 
     /**
      * Get price
