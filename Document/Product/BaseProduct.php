@@ -246,7 +246,7 @@ class BaseProduct implements ProductInterface
      * @param PriceInterface $price
      * @return self
      */
-    public function setPrice(PriceInterface $price)
+    public function setPrice(PriceInterface $price = null)
     {
         $this->price = $price;
         return $this;
