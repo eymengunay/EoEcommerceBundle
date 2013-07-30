@@ -14,7 +14,16 @@ class PriceConditionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	->add('conditions', 'text')
+        	->add('variants', 'document', array(
+                'class'     => 'Eo\EcommerceBundle\Document\Variant\Variant',
+                'multiple'  => true,
+                'require'   => true
+            ))
+            ->add('conditions', 'document', array(
+                'class'     => 'Eo\EcommerceBundle\Document\Condition\Condition',
+                'multiple'  => true,
+                'require'   => true
+            ))
         ;
     }
 

@@ -39,16 +39,9 @@ class BaseCustomProduct extends BaseProduct implements CustomProductInterface
     /**
      * @var ArrayCollection $prices
      *
-     * @ODM\ReferenceMany
+     * @ODM\ReferenceMany(targetDocument="Eo\EcommerceBundle\Document\Price\Price")
      */
     protected $prices;
-
-    /**
-     * @var ArrayCollection $priceConditions
-     *
-     * @ODM\EmbedMany
-     */
-    protected $priceConditions;
 
     /**
      * @var ArrayCollection $options
@@ -58,7 +51,7 @@ class BaseCustomProduct extends BaseProduct implements CustomProductInterface
     /**
      * @var ArrayCollection $variants
      *
-     * @ODM\ReferenceMany(mappedBy="product")
+     * @ODM\ReferenceMany(targetDocument="Eo\EcommerceBundle\Document\Variant\Variant", mappedBy="product")
      */
     protected $variants;
 
@@ -178,75 +171,6 @@ class BaseCustomProduct extends BaseProduct implements CustomProductInterface
     public function getPrices()
     {
         return $this->prices;
-    }
-
-    /**
-     * Has priceCondition
-     *
-     * @param bool
-     */
-    public function hasPriceCondition(PriceConditionInterface $priceCondition)
-    {
-        return $this->priceConditions->contains($priceCondition);
-    }
-
-    /**
-     * Add priceCondition
-     *
-     * @param  PriceConditionInterface
-     * @return self
-     */
-    public function addPriceCondition(PriceConditionInterface $priceCondition)
-    {
-        if (!$this->hasPriceCondition($priceCondition)) {
-            $this->priceConditions->add($priceCondition);
-        }
-        return $this;
-    }
-
-    /**
-     * Remove priceConditions
-     *
-     * @param PriceConditionInterface $priceCondition
-     */
-    public function removePriceCondition(PriceConditionInterface $priceCondition)
-    {
-        if ($this->hasPriceCondition($priceCondition)) {
-            $this->priceConditions->removeElement($priceCondition);
-        }
-        return $this;
-    }
-
-    /**
-     * Clear all priceConditions
-     *
-     * @return self
-     */
-    public function clearPriceConditions()
-    {
-        $this->priceConditions->clear();
-        return $this;
-    }
-
-    /**
-     * Set priceConditions
-     *
-     * @param  ArrayCollection $priceConditions
-     * @return self
-     */
-    public function setPriceConditions(ArrayCollection $priceConditions)
-    {
-        return $this->priceConditions;
-    }
-
-    /**
-     * Get priceConditions
-     *
-     * @return Doctrine\Common\Collections\Collection $priceConditions
-     */
-    public function getPriceConditions()
-    {
-        return $this->priceConditions;
     }
 
     /**

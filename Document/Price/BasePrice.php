@@ -43,6 +43,13 @@ class BasePrice implements PriceInterface
     protected $price;
 
     /**
+     * @var string $condition
+     *
+     * @ODM\Field(name="condition", type="string")
+     */
+    protected $condition;
+
+    /**
      * @var date $createdAt
      *
      * @ODM\Field(name="createdAt", type="date")
@@ -108,6 +115,28 @@ class BasePrice implements PriceInterface
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set condition
+     *
+     * @param  string $condition
+     * @return self
+     */
+    public function setCondition($condition)
+    {
+        $this->condition = $condition;
+        return $this;
+    }
+
+    /**
+     * Get condition
+     *
+     * @return string $condition
+     */
+    public function getCondition()
+    {
+        return $this->condition;
     }
 
     /**

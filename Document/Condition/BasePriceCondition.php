@@ -10,6 +10,8 @@
  */
 
 namespace Eo\EcommerceBundle\Document\Condition;
+
+use \DateTime;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -23,14 +25,44 @@ abstract class BasePriceCondition implements PriceConditionInterface
     protected $id;
 
     /**
-     * @ODM\Hash
+     * @ODM\ReferenceMany(targetDocument="Eo\EcommerceBundle\Document\Variant\Variant")
      */
-    protected $conditions;
+    protected $variants;
 
     /**
-     * @ODM\ReferenceOne
+     * @ODM\String
+     */
+    protected $condition;
+
+    /**
+     * @ODM\ReferenceOne(targetDocument="Eo\EcommerceBundle\Document\Price\Price")
      */
     protected $price;
+
+    /**
+     * @ODM\Date
+     */
+    protected $createdAt;
+
+    /**
+     * @ODM\Date
+     */
+    protected $updatedAt;
+
+    public function __construct()
+    {
+        $this->variants = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->conditions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->createdAt = new DateTime();
+    }
+
+    /**
+     * @ODM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->updatedAt = new DateTime();
+    }
 
     /**
      * Get id
@@ -43,25 +75,85 @@ abstract class BasePriceCondition implements PriceConditionInterface
     }
 
     /**
-     * Set conditions
+     * Add variants
      *
-     * @param hash $conditions
-     * @return self
+     * @param $variants
      */
-    public function setConditions($conditions)
+    public function addVariant($variants)
     {
-        $this->conditions = $conditions;
-        return $this;
+        $this->variants[] = $variants;
+    }
+
+    /**
+    * Remove variants
+    *
+    * @param <variableType$variants
+    */
+    public function removeVariant($variants)
+    {
+        $this->variants->removeElement($variants);
+    }
+
+    /**
+     * Get variants
+     *
+     * @return Doctrine\Common\Collections\Collection $variants
+     */
+    public function getVariants()
+    {
+        return $this->variants;
+    }
+
+    /**
+     * Add conditions
+     *
+     * @param Eo\EcommerceBundle\Document\Condition\Condition $conditions
+     */
+    public function addCondition($conditions)
+    {
+        $this->conditions[] = $conditions;
+    }
+
+    /**
+    * Remove conditions
+    *
+    * @param <variableType$conditions
+    */
+    public function removeCondition($conditions)
+    {
+        $this->conditions->removeElement($conditions);
     }
 
     /**
      * Get conditions
      *
-     * @return hash $conditions
+     * @return Doctrine\Common\Collections\Collection $conditions
      */
     public function getConditions()
     {
         return $this->conditions;
+    }
+
+    /**
+     * Set condition
+     *
+     * @param  string $condition
+     * @return self
+     */
+    public function setCondition($condition)
+    {
+        $this->condition = $condition;
+        return $this;
+    }
+
+    /**
+     * Get condition
+     *
+     * @return string $condition
+     */
+    public function getCondition()
+    {
+        return $this->condition;
     }
 
     /**
@@ -84,5 +176,49 @@ abstract class BasePriceCondition implements PriceConditionInterface
     public function getPrice()
     {
         return $this->price;
+    }
+
+     /**
+     * Set createdAt
+     *
+     * @param  DateTime $createdAt
+     * @return self
+     */
+    public function setCreatedAt(DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return DateTime $createdAt
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param  DateTime $updatedAt
+     * @return self
+     */
+    public function setUpdatedAt(DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return DateTime $updatedAt
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

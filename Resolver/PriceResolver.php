@@ -11,6 +11,8 @@
 
 namespace Eo\EcommerceBundle\Resolver;
 
+use Eo\EcommerceBundle\Document\Product\CustomProductInterface;
+use Eo\EcommerceBundle\Document\Variant\VariantInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,53 +26,97 @@ class PriceResolver implements PriceResolverInterface
     protected $container;
 
     /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @var array
+     */
+    protected $resolvables = array();
+
+    /**
      * Class constructor
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container  = $container;
+        $this->container = $container;
+        $this->config    = $this->container->getParameter('eo_ecommerce.config');
+    }
+
+    /**
+     * Add resolvable
+     *
+     * @param  VariantInterface $product
+     * @return self
+     */
+    public function addResolvable(VariantInterface $product)
+    {
+        $this->resolvables[$product->getId()] = $product;
+        return $this;
     }
 
     /**
      * Resolve price of given product
      *
+     * @param  VariantInterface $product
      * @return PriceInterface
      */
-    public function resolve($product)
+    public function resolve(VariantInterface $product)
     {
-        $price = null;
-        $resolvedPrices = array();
-        // Check pricing conditions of given product
-        $pricingConditions = $product->getPricingConditions();
-        foreach ($pricingConditions as $pricingCondition) {
-            $name  = $pricingCondition->getName();
-            $condition = $this->getCondition($name);
-            if ($condition && $condition->check()) {
-                $resolved[] = $pricingCondition->getPrice();
-            }
+        $in = array();
+
+        foreach ($this->resolvables as $resolvable) {
+            $in[] = $resolvable->getId();
         }
 
-        // If we have multiple prices matching to conditions
-        // return lowest price. @TODO: make the 'lowest' configurable.
-        foreach ($resolvedPrices as $resolvedPrice) {
-            if (!isset($price)) {
-                $price = $resolvedPrice;
-                continue;
-            }
-            if ($price->getPrice() > $resolvedPrice->getPrice()) {
-                $price = $resolvedPrice;
-            }
-        }
 
-        // If we still don't have a price resolved then return the
+        // Check conditions
+        $cm = $this->container->get("eo_ecommerce.condition_manager");
+        $price = $cm->check($product);
+
+        // If no conditions found then return the
         // highest price. @TODO: make the 'highest' configurable.
-        if (!isset($price)) {
+        if (is_null($price)) {
+            $max = 0;
             $prices = $product->getPrices();
-            if ($prices && !empty($prices)) {
-                //$price = current($prices);
+            foreach ($prices as $p) {
+                if ($p->getPrice() > $max) {
+                    $max = $p->getPrice();
+                    $price = $p;
+                }
             }
         }
 
+        if (!is_null($price)) {
+            $product->setPrice($price);
+        }
         return $price;
+    }
+
+    /**
+     * Resolve min/max prices of given product
+     *
+     * @param  CustomProductInterface $product
+     * @return array                  $minmax  An array of min & max prices
+     */
+    public function resolveMinMax(CustomProductInterface $product)
+    {
+        //return array(null, null);
+        $min = null;
+        $max = null;
+        // Loop through product variants
+        foreach ($product->getVariants() as $variant) {
+            $price = $variant->getPrice();
+            if ($price && (!$min or $price->getPrice() < $min->getPrice())) {
+                $min = $price;
+                $product->setMinPrice($price);
+            }
+            if ($price && (!$max or $price->getPrice() > $max->getPrice())) {
+                $max = $price;
+                $product->setMaxPrice($price);
+            }
+        }
+        return array($min, $max);
     }
 }
