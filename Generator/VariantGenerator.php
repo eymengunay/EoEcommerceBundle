@@ -61,7 +61,7 @@ class VariantGenerator implements VariantGeneratorInterface
                     // Update variant
                     $variant->setSku($sku);
                     $variant->setSlug($value->getSlug());
-                    $variant->setName($value->getName());
+                    $variant->setName(implode(' ', array($product->getName(), $value->getName())));
                     $variant->setDescription($value->getDescription());
                     $variant->setProduct($product);
                     $variant->setUpdatedAt(new DateTime());
