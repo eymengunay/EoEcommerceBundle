@@ -64,13 +64,6 @@ class PriceResolver implements PriceResolverInterface
      */
     public function resolve(VariantInterface $product)
     {
-        $in = array();
-
-        foreach ($this->resolvables as $resolvable) {
-            $in[] = $resolvable->getId();
-        }
-
-
         // Check conditions
         $cm = $this->container->get("eo_ecommerce.condition_manager");
         $price = $cm->check($product);
