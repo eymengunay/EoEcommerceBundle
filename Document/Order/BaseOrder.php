@@ -134,15 +134,11 @@ class BaseOrder implements OrderInterface
     public function calculateItemsTotal()
     {
         $itemsTotal = 0;
-
         foreach ($this->items as $item) {
             $item->calculateTotal();
-
             $itemsTotal += $item->getTotal();
         }
-
         $this->itemsTotal = $itemsTotal;
-
         return $this;
     }
 

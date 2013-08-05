@@ -20,43 +20,8 @@ use Eo\EcommerceBundle\Document\Order\OrderInterface;
 use Eo\EcommerceBundle\Document\Order\OrderItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class OrderBuilder implements OrderBuilderInterface
+class OrderBuilder extends BaseBuilder implements OrderBuilderInterface
 {
-	/**
-	 * @var ContainerInterface
-	 */
-	protected $container;
-
-	/**
-	 * Class constructor
-	 *
-	 * @param ContainerInterface $container
-	 */
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
-	}
-
-	/**
-	 * Get bundle configuration
-	 *
-	 * @return array
-	 */
-	private function getConfiguration()
-	{
-		return $this->container->getParameter('eo_ecommerce.config');
-	}
-
-	/**
-	 * Get document manager
-	 *
-	 * @return array
-	 */
-	private function getDocumentManager()
-	{
-		return $this->container->get('doctrine.odm.mongodb.document_manager');
-	}
-
 	/**
 	 * Creates a new order
 	 *
