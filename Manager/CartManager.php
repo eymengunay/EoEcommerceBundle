@@ -86,7 +86,7 @@ class CartManager implements CartManagerInterface
      *
      * @return CartInterface
      */
-    public function getCurrentCart()
+    private function getCart()
     {
         $sessionCart = $this->session->get(self::SESSION_KEY, null);
 
@@ -104,29 +104,30 @@ class CartManager implements CartManagerInterface
         return $cart;
     }
 
-    public function getCreateCart()
+    /**
+     * Create a new cart
+     *
+     * @return CartInterface
+     */
+    private function createCart()
     {
-        $cart = $this->getCurrentCart();
+        // Cart class from bundle configuration
+        $config = $this->getConfiguration();
+        $cartClass = $config['carts']['class'];
 
-        if (is_null($cart)) {
-            // Cart class from bundle configuration
-            $config = $this->getConfiguration();
-            $cartClass = $config['carts']['class'];
+        // Create new cart
+        $cart = new $cartClass();
 
-            // Create new cart
-            $cart = new $cartClass();
+        // Set current user as holder of this cart
+        $sc = $this->container->get('security.context');
+        $user = $sc->getToken()->getUser();
 
-            // Set current user as holder of this cart
-            $sc = $this->container->get('security.context');
-            $user = $sc->getToken()->getUser();
+        $cart->setUser($user);
 
-            $cart->setUser($user);
+        $dm = $this->getDocumentManager();
+        $this->save($cart, true);
 
-            $dm = $this->getDocumentManager();
-            $this->save($cart, true);
-
-            $this->session->set(self::SESSION_KEY, $cart->getId());
-        }
+        $this->session->set(self::SESSION_KEY, $cart->getId());
 
         return $cart;
     }
@@ -137,7 +138,7 @@ class CartManager implements CartManagerInterface
      * @param  CartInterface $cart
      * @return self
      */
-    public function save(CartInterface $cart, $flush = false)
+    private function save(CartInterface $cart, $flush = false)
     {
         $dm = $this->getDocumentManager();
         $dm->persist($cart);
@@ -147,5 +148,22 @@ class CartManager implements CartManagerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Gets current cart if exists otherwise
+     * creates an empty cart
+     *
+     * @return CartInterface
+     */
+    public function getOrCreateCart()
+    {
+        $cart = $this->getCurrentCart();
+
+        if (is_null($cart)) {
+            $cart = $this->createCart();
+        }
+
+        return $cart;
     }
 }

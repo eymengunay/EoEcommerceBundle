@@ -1,0 +1,9 @@
+# View cart
+Eo_EcommerceBundle_Cart_View:
+    defaults:  { _controller:  EoEcommerceBundle:Cart:index }
+    pattern: /
+
+# Checkout
+Eo_EcommerceBundle_Cart_Checkout:
+    defaults:  { _controller:  EoEcommerceBundle:Cart:checkout }
+    pattern: /checkout
