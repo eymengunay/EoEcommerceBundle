@@ -60,7 +60,7 @@
         </service>
         <!-- Cart Extension -->
         <service id="eo_ecommerce.twig.cart_extension" class="%eo_ecommerce.twig.cart_extension.class%">
-            <argument type="service" id="eo_ecommerce.cart_manager"/>
+            <argument type="service" id="service_container"/>
             <tag name="twig.extension" />
         </service>
     </services>

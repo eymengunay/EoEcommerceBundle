@@ -61,9 +61,11 @@ class VariantGenerator implements VariantGeneratorInterface
                     // Update variant
                     $variant->setSku($sku);
                     $variant->setSlug($value->getSlug());
-                    $variant->setName(implode(' ', array($product->getName(), $value->getName())));
+                    $variant->setName($value->getName());
+                    $variant->setFullName(implode(' ', array($product->getName(), $value->getName())));
                     $variant->setDescription($value->getDescription());
                     $variant->setProduct($product);
+                    $variant->addOptionValue($value);
                     $variant->setUpdatedAt(new DateTime());
                     // Check for variant prices
                     $variantPrices = $value->getVariantPrices();
