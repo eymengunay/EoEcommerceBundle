@@ -13,12 +13,21 @@ namespace Eo\EcommerceBundle\Twig\Extension;
 
 use Eo\EcommerceBundle\Manager\CartManagerInterface;
 use Eo\EcommerceBundle\Document\Cart\CartInterface;
+use Eo\EcommerceBundle\Document\Product\ProductInterface;
+use Eo\EcommerceBundle\Document\Product\CustomProductInterface;
+use Eo\EcommerceBundle\Form\Type\ProductType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Eo\EcommerceBundle\Twig\Extension\CartExtension
  */
 class CartExtension extends \Twig_Extension
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     /**
      * @var CartManagerInterface
      */
@@ -27,11 +36,12 @@ class CartExtension extends \Twig_Extension
     /**
      * Class constructor
      *
-     * @param CartManagerInterface $cm
+     * @param ContainerInterface $container
      */
-    public function __construct(CartManagerInterface $cm)
+    public function __construct(ContainerInterface $container)
     {
-        $this->cm = $cm;
+        $this->cm = $container->get('eo_ecommerce.cart_manager');
+        $this->container = $container;
     }
 
     /**
@@ -44,6 +54,11 @@ class CartExtension extends \Twig_Extension
                 'is_safe' => array('html'),
                 'needs_environment' => true,
                 'needs_context' => true,
+            )),
+            'cart_form' => new \Twig_Function_Method($this, 'getCartForm', array(
+                'is_safe' => array('html'),
+                'needs_environment' => true,
+                'needs_context' => true,
             ))
         );
     }
@@ -53,9 +68,41 @@ class CartExtension extends \Twig_Extension
      *
      * @return CartInterface
      */
-    public function getCurrentCart(\Twig_Environment $env, $context, $scope = null, $options = array())
+    public function getCurrentCart(\Twig_Environment $env, $context)
     {
         return $this->cm->getCurrentCart();
+    }
+
+    /**
+     * Get cart form
+     *
+     * @return CartInterface
+     */
+    public function getCartForm(\Twig_Environment $env, $context, ProductInterface $product)
+    {
+        $form = $this->container->get('form.factory')->create(new ProductType(), null);
+
+        $products = array();
+        if ($product instanceof CustomProductInterface && $product->getVariants()) {
+            $products = $product->getVariants();
+        } else {
+            $products = array($product);
+        }
+
+        $data = array();
+        foreach ($products as $product) {
+            $data[] = array(
+                'sku' => $product->getSku(),
+                'name' => $product->getName(),
+                'price' => $product->getPrice(),
+            );
+        }
+
+        $form->setData(array(
+            'products' => $data
+        ));
+
+        return $form->createView();
     }
 
     /**

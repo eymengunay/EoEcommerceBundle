@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Your cart</title>
+</head>
+<body>
+	<h2>Your cart</h2>
+
+	{% if cart.items|length > 0 %}
+		<table border="1">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Qty</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in cart.items %}
+				<tr>
+					<td>{{ item.product.fullName|default(item.product.name) }}</td>
+					<td>{{ item.quantity }}</td>
+                    <td>{{ item.total }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">{{ cart.total }}</td>
+				</tr>
+			</tfoot>
+		</table>
+		<a href="{{ path('Eo_EcommerceBundle_Cart_Checkout') }}">Checkout</a>
+	{% else %}
+		<h3>Your cart is empty</h3>
+	{% endif %}
+</body>
+</html>

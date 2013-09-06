@@ -54,7 +54,7 @@ class CartManager implements CartManagerInterface
      *
      * @return array
      */
-    private function getConfiguration()
+    public function getConfiguration()
     {
         return $this->container->getParameter('eo_ecommerce.config');
     }
@@ -64,7 +64,7 @@ class CartManager implements CartManagerInterface
      *
      * @return array
      */
-    private function getDocumentManager()
+    public function getDocumentManager()
     {
         return $this->container->get('doctrine.odm.mongodb.document_manager');
     }
@@ -74,7 +74,7 @@ class CartManager implements CartManagerInterface
      *
      * @return ObjectRepository
      */
-    private function getRepository()
+    public function getRepository()
     {
         $config = $this->getConfiguration();
         $dm = $this->getDocumentManager();
@@ -86,7 +86,7 @@ class CartManager implements CartManagerInterface
      *
      * @return CartInterface
      */
-    private function getCart()
+    public function getCart()
     {
         $sessionCart = $this->session->get(self::SESSION_KEY, null);
 
@@ -138,7 +138,7 @@ class CartManager implements CartManagerInterface
      * @param  CartInterface $cart
      * @return self
      */
-    private function save(CartInterface $cart, $flush = false)
+    public function save(CartInterface $cart, $flush = true)
     {
         $dm = $this->getDocumentManager();
         $dm->persist($cart);
@@ -158,7 +158,7 @@ class CartManager implements CartManagerInterface
      */
     public function getOrCreateCart()
     {
-        $cart = $this->getCurrentCart();
+        $cart = $this->getCart();
 
         if (is_null($cart)) {
             $cart = $this->createCart();

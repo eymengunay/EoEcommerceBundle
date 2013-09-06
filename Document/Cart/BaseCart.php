@@ -12,7 +12,6 @@
 namespace Eo\EcommerceBundle\Document\Cart;
 
 use \DateTime;
-use Eo\EcommerceBundle\Document\Product\ProductInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -37,7 +36,7 @@ class BaseCart implements CartInterface
     protected $user;
 
     /**
-     * @ODM\ReferenceMany
+     * @ODM\EmbedMany
      */
     protected $items;
 
@@ -149,10 +148,10 @@ class BaseCart implements CartInterface
     /**
      * Has item
      *
-     * @param  ProductInterface $item
+     * @param  CartItemInterface $item
      * @return boolean
      */
-    public function hasItem(ProductInterface $item)
+    public function hasItem(CartItemInterface $item)
     {
         return $this->items->contains($item);
     }
@@ -160,10 +159,10 @@ class BaseCart implements CartInterface
     /**
      * Add cart item
      *
-     * @param  ProductInterface $item
+     * @param  CartItemInterface $item
      * @return self
      */
-    public function addItem(ProductInterface $item)
+    public function addItem(CartItemInterface $item)
     {
         if ($this->hasItem($item) === FALSE) {
             $this->items[] = $item;
@@ -174,10 +173,10 @@ class BaseCart implements CartInterface
     /**
      * Remove item
      *
-     * @param  ProductInterface $item
+     * @param  CartItemInterface $item
      * @return boolean
      */
-    public function removeItem(ProductInterface $item)
+    public function removeItem(CartItemInterface $item)
     {
         return $this->items->removeElement($item);
     }
