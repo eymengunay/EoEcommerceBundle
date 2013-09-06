@@ -22,7 +22,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  * @ODM\MappedSuperclass
  * @ODM\ChangeTrackingPolicy("DEFERRED_IMPLICIT")
  */
-class BaseOptionValue extends BaseCustomProduct
+class BaseOptionValue extends BaseCustomProduct implements OptionValueInterface
 {
     /**
      * @var array $variantPrices

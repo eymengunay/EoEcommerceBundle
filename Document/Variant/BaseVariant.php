@@ -13,7 +13,9 @@ namespace Eo\EcommerceBundle\Document\Variant;
 
 use Eo\EcommerceBundle\Document\Product\BaseCustomProduct;
 use Eo\EcommerceBundle\Document\Product\ProductInterface;
+use Eo\EcommerceBundle\Document\Option\OptionValueInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Eo\EcommerceBundle\Document\Variant\BaseVariant
@@ -24,9 +26,49 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 class BaseVariant extends BaseCustomProduct implements VariantInterface
 {
     /**
+     * @var string $fullName
+     *
+     * @ODM\Field(name="fullName", type="string")
+     */
+    protected $fullName;
+
+    /**
      * @ODM\ReferenceOne(inversedBy="variants")
      */
     protected $product;
+
+    /**
+     * @ODM\ReferenceMany()
+     */
+    protected $optionValues;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->optionValues  = new ArrayCollection();
+    }
+
+    /**
+     * Set fullName
+     *
+     * @param string $fullName
+     * @return self
+     */
+    public function setFullName($fullName)
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
+
+    /**
+     * Get fullName
+     *
+     * @return string $fullName
+     */
+    public function getFullName()
+    {
+        return $this->fullName;
+    }
 
     /**
      * {@inheritdoc}
@@ -64,5 +106,41 @@ class BaseVariant extends BaseCustomProduct implements VariantInterface
             }
         }
         return $this->prices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasOptionValue(OptionValueInterface $optionValue)
+    {
+        return $this->optionValues->contains($optionValue);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addOptionValue(OptionValueInterface $optionValue)
+    {
+        if (!$this->hasOptionValue($optionValue)) {
+            $this->optionValues->add($optionValue);
+        }
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptionValues(ArrayCollection $optionValues)
+    {
+        $this->optionValues = $optionValues;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptionValues()
+    {
+        return $this->optionValues;
     }
 }

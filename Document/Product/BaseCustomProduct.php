@@ -24,7 +24,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  * @ODM\MappedSuperclass
  * @ODM\ChangeTrackingPolicy("DEFERRED_IMPLICIT")
  */
-class BaseCustomProduct extends BaseProduct implements CustomProductInterface
+class BaseCustomProduct extends BaseProduct implements CustomProductInterface, ProductInterface
 {
     /**
      * @var PriceInterface $maxPrice
