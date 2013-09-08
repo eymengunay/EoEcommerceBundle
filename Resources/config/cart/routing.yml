@@ -1,13 +1,19 @@
 # View cart
 Eo_EcommerceBundle_Cart_View:
     defaults: { _controller:  EoEcommerceBundle:Cart:index }
-    pattern:  /cart
+    pattern:  /
 
-# Checkout
+# Add item
 Eo_EcommerceBundle_Cart_Add:
     defaults: { _controller:  EoEcommerceBundle:Cart:add }
-    pattern:  /cart/add
+    pattern:  /add
     methods: [POST]
+
+# Remove item
+Eo_EcommerceBundle_Cart_Remove:
+    defaults: { _controller:  EoEcommerceBundle:Cart:remove }
+    pattern:  /remove/{itemId}
+    methods: [GET]
 
 # Checkout
 Eo_EcommerceBundle_Cart_Checkout:

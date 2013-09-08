@@ -1,0 +1,5 @@
+add:
+    cart:
+        success: Product(s) added to your cart successfully!
+        error: An error occured while adding product(s) to your cart. Please try again.
+        empty: You have to select at least 1 product to add to your cart.

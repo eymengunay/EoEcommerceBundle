@@ -15,6 +15,7 @@ use Eo\EcommerceBundle\Document\Cart\CartInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Eo\EcommerceBundle\Twig\Extension\CartExtension
@@ -34,6 +35,11 @@ class CartManager implements CartManagerInterface
     protected $session;
 
     /**
+     * @var EcommerceManager
+     */
+    protected $ecommerceManager;
+
+    /**
      * Class constructor
      *
      * @param ContainerInterface $container
@@ -42,43 +48,12 @@ class CartManager implements CartManagerInterface
     {
         $this->container = $container;
         $this->session = $container->get('session');
+        $this->ecommerceManager = $container->get('eo_ecommerce.manager');
 
         // Initialize session if not started already
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
-    }
-
-    /**
-     * Get bundle configuration
-     *
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->container->getParameter('eo_ecommerce.config');
-    }
-
-    /**
-     * Get document manager
-     *
-     * @return array
-     */
-    public function getDocumentManager()
-    {
-        return $this->container->get('doctrine.odm.mongodb.document_manager');
-    }
-
-    /**
-     * Get document manager
-     *
-     * @return ObjectRepository
-     */
-    public function getRepository()
-    {
-        $config = $this->getConfiguration();
-        $dm = $this->getDocumentManager();
-        return $dm->getRepository($config['carts']['class']);
     }
 
     /**
@@ -94,7 +69,7 @@ class CartManager implements CartManagerInterface
             return null;
         }
 
-        $repo = $this->getRepository();
+        $repo = $this->ecommerceManager->getCartRepository();
         $cart = $repo->findOneBy(array('id' => $sessionCart));
 
         if (is_null($cart)) {
@@ -109,45 +84,23 @@ class CartManager implements CartManagerInterface
      *
      * @return CartInterface
      */
-    private function createCart()
+    public function createCart()
     {
-        // Cart class from bundle configuration
-        $config = $this->getConfiguration();
-        $cartClass = $config['carts']['class'];
-
         // Create new cart
-        $cart = new $cartClass();
+        $cart = $this->ecommerceManager->createNewCart();
 
         // Set current user as holder of this cart
         $sc = $this->container->get('security.context');
         $user = $sc->getToken()->getUser();
 
-        $cart->setUser($user);
-
-        $dm = $this->getDocumentManager();
-        $this->save($cart, true);
+        if ($user instanceof UserInterface) {
+            $cart->setUser($user);
+        }
+        $this->ecommerceManager->saveCart($cart, true);
 
         $this->session->set(self::SESSION_KEY, $cart->getId());
 
         return $cart;
-    }
-
-    /**
-     * Save cart
-     *
-     * @param  CartInterface $cart
-     * @return self
-     */
-    public function save(CartInterface $cart, $flush = true)
-    {
-        $dm = $this->getDocumentManager();
-        $dm->persist($cart);
-
-        if ($flush) {
-            $dm->flush($cart, array('safe' => true));
-        }
-
-        return $this;
     }
 
     /**
@@ -165,5 +118,29 @@ class CartManager implements CartManagerInterface
         }
 
         return $cart;
+    }
+
+    /**
+     * Remove cart item
+     *
+     * @param string $itemId
+     */
+    public function removeItem($itemId)
+    {
+        $cart = $this->getCart();
+        if (is_null($cart)) {
+            return false;
+        }
+
+        $i = 0;
+        foreach ($cart->getItems() as $item) {
+            if ($item->getId() == $itemId) {
+                $cart->removeItem($i);
+                return true;
+            }
+            $i++;
+        }
+
+        return false;
     }
 }

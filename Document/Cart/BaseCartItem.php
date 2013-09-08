@@ -86,7 +86,7 @@ class BaseCartItem implements CartItemInterface
      */
     public function calculateTotal()
     {
-        $this->total = ($this->quantity * $this->getUnitPrice());
+        $this->total = ($this->quantity * $this->getUnitPrice() ?: 0);
         return $this;
     }
 
@@ -111,8 +111,10 @@ class BaseCartItem implements CartItemInterface
         $this->product = $product;
 
         // Set cart item price
-        if ($this->product->getPrice()) {
-            $this->setUnitPrice($this->product->getPrice());
+        if ($price = $this->product->getPrice()) {
+            $this->setUnitPrice($price->getPrice());
+        } else {
+            throw new \Exception(sprintf("Product doesn't have any price"));
         }
 
         return $this;

@@ -31,6 +31,18 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('products')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('class')->defaultValue("Eo\EcommerceBundle\Document\Product\Product")->end()
+                    ->end()
+                ->end()
+                ->arrayNode('customProducts')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('class')->defaultValue("Eo\EcommerceBundle\Document\Product\CustomProduct")->end()
+                    ->end()
+                ->end()
                 ->arrayNode('prices')
                     ->addDefaultsIfNotSet()
                     ->children()

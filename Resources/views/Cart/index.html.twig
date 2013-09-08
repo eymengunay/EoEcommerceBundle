@@ -13,7 +13,8 @@
 				<tr>
 					<th>Name</th>
 					<th>Qty</th>
-					<th>Amount</th>
+					<th>Unit price</th>
+                    <th>Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -21,13 +22,14 @@
 				<tr>
 					<td>{{ item.product.fullName|default(item.product.name) }}</td>
 					<td>{{ item.quantity }}</td>
-                    <td>{{ item.total }}</td>
+                    <td>{{ item.unitPrice / 100 }}</td>
+                    <td>{{ item.total / 100 }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="3">{{ cart.total }}</td>
+					<td colspan="4">{{ cart.total / 100 }}</td>
 				</tr>
 			</tfoot>
 		</table>

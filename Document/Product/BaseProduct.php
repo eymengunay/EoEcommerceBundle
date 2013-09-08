@@ -23,7 +23,7 @@ use Doctrine\Bundle\MongoDBBundle\Validator\Constraints as ODMConstraints;
  * @ODMConstraints\Unique("sku")
  * @ODM\ChangeTrackingPolicy("DEFERRED_IMPLICIT")
  */
-class BaseProduct implements ProductInterface
+abstract class BaseProduct implements ProductInterface
 {
     /**
      * @var MongoId $id

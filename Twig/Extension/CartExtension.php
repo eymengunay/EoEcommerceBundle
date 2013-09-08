@@ -50,12 +50,17 @@ class CartExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'current_cart' => new \Twig_Function_Method($this, 'getCurrentCart', array(
+            'eo_cart' => new \Twig_Function_Method($this, 'getCart', array(
                 'is_safe' => array('html'),
-                'needs_environment' => true,
-                'needs_context' => true,
+                'needs_environment' => false,
+                'needs_context' => false,
             )),
-            'cart_form' => new \Twig_Function_Method($this, 'getCartForm', array(
+            'eo_cart_count' => new \Twig_Function_Method($this, 'getCartCount', array(
+                'is_safe' => array('html'),
+                'needs_environment' => false,
+                'needs_context' => false,
+            )),
+            'eo_cart_form' => new \Twig_Function_Method($this, 'getCartForm', array(
                 'is_safe' => array('html'),
                 'needs_environment' => true,
                 'needs_context' => true,
@@ -64,13 +69,23 @@ class CartExtension extends \Twig_Extension
     }
 
     /**
-     * Current user cart
+     * Get current user cart
      *
      * @return CartInterface
      */
-    public function getCurrentCart(\Twig_Environment $env, $context)
+    public function getCart()
     {
-        return $this->cm->getCurrentCart();
+        return $this->cm->getOrCreateCart();
+    }
+
+    /**
+     * Get current user cart count
+     *
+     * @return int
+     */
+    public function getCartCount()
+    {
+        return $this->getCart()->countItems();
     }
 
     /**
@@ -94,7 +109,7 @@ class CartExtension extends \Twig_Extension
             $data[] = array(
                 'sku' => $product->getSku(),
                 'name' => $product->getName(),
-                'price' => $product->getPrice(),
+                'price' => $product->getPrice()->getPrice(),
             );
         }
 

@@ -9,10 +9,10 @@
         <parameter key="eo_ecommerce.doctrine_listener.class">Eo\EcommerceBundle\EventListener\DoctrineListener</parameter>
         <parameter key="eo_ecommerce.price_resolver_listener.class">Eo\EcommerceBundle\EventListener\PriceResolverListener</parameter>
         <parameter key="eo_ecommerce.price_resolver.class">Eo\EcommerceBundle\Resolver\PriceResolver</parameter>
-        <parameter key="eo_ecommerce.order_builder.class">Eo\EcommerceBundle\Builder\OrderBuilder</parameter>
         <parameter key="eo_ecommerce.condition_manager.class">Eo\EcommerceBundle\Condition\ConditionManager</parameter>
         <parameter key="eo_ecommerce.weekend_condition.class">Eo\EcommerceBundle\Condition\WeekendCondition</parameter>
         <parameter key="eo_ecommerce.form.type.condition_choice.class">Eo\EcommerceBundle\Form\Type\ConditionChoiceType</parameter>
+        <parameter key="eo_ecommerce.manager.class">Eo\EcommerceBundle\Manager\EcommerceManager</parameter>
         <parameter key="eo_ecommerce.cart_manager.class">Eo\EcommerceBundle\Manager\CartManager</parameter>
         <parameter key="eo_ecommerce.twig.cart_extension.class">Eo\EcommerceBundle\Twig\Extension\CartExtension</parameter>
     </parameters>
@@ -36,10 +36,6 @@
             <argument type="service" id="eo_ecommerce.price_resolver"/>
             <tag name="doctrine_mongodb.odm.event_listener" event="postLoad" />
         </service>
-        <!-- Order Builder -->
-        <service id="eo_ecommerce.order_builder" class="%eo_ecommerce.order_builder.class%">
-            <argument type="service" id="service_container"/>
-        </service>
         <!-- Condition Manager -->
         <service id="eo_ecommerce.condition_manager" class="%eo_ecommerce.condition_manager.class%">
             <argument type="service" id="service_container"/>
@@ -53,6 +49,10 @@
         <service id="eo_ecommerce.form.type.condition_choice" class="%eo_ecommerce.form.type.condition_choice.class%">
             <argument type="service" id="eo_ecommerce.condition_manager"/>
             <tag name="form.type" alias="condition_choice" />
+        </service>
+        <!-- Ecommerce Manager -->
+        <service id="eo_ecommerce.manager" class="%eo_ecommerce.manager.class%">
+            <argument type="service" id="service_container"/>
         </service>
         <!-- Cart Manager -->
         <service id="eo_ecommerce.cart_manager" class="%eo_ecommerce.cart_manager.class%">

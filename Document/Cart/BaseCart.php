@@ -104,10 +104,7 @@ class BaseCart implements CartInterface
         $itemsTotal = 0;
         foreach ($this->items as $item) {
             $item->calculateTotal();
-            $price = $item->getPrice();
-            if ($price) {
-                $itemsTotal += $price->getPrice();
-            }
+            $itemsTotal += $item->getTotal();
         }
         $this->itemsTotal = $itemsTotal;
         return $this;
@@ -173,12 +170,33 @@ class BaseCart implements CartInterface
     /**
      * Remove item
      *
+     * @param  int     $key
+     * @return boolean
+     */
+    public function removeItem($key)
+    {
+        return $this->items->remove($key);
+    }
+
+    /**
+     * Remove item element
+     *
      * @param  CartItemInterface $item
      * @return boolean
      */
-    public function removeItem(CartItemInterface $item)
+    public function removeItemElement(CartItemInterface $item)
     {
         return $this->items->removeElement($item);
+    }
+
+    /**
+     * Count items
+     *
+     * @return int
+     */
+    public function countItems()
+    {
+        return $this->items->count();
     }
 
     /**
