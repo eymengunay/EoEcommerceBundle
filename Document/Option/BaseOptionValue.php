@@ -51,9 +51,7 @@ class BaseOptionValue extends BaseCustomProduct implements OptionValueInterface
      */
     public function addVariantPrice(PriceInterface $variantPrice)
     {
-        if (!$this->hasVariantPrice($variantPrice)) {
-            $this->variantPrices[$variantPrice->getId()] = $variantPrice;
-        }
+        $this->variantPrices[$variantPrice->getId()] = $variantPrice;
         return $this;
     }
 
@@ -64,9 +62,7 @@ class BaseOptionValue extends BaseCustomProduct implements OptionValueInterface
      */
     public function removeVariantPrice(PriceInterface $variantPrice)
     {
-        if ($this->hasVariantPrice($variantPrice)) {
-            unset($this->variantPrices[$variantPrice->getId()]);
-        }
+        unset($this->variantPrices[$variantPrice->getId()]);
         return $this;
     }
 
@@ -76,22 +72,6 @@ class BaseOptionValue extends BaseCustomProduct implements OptionValueInterface
     public function clearVariantPrices()
     {
         $this->variantPrices = array();
-        return $this;
-    }
-
-    /**
-     * Set variantPrices
-     *
-     * @param  array $variantPrices
-     * @return self
-     */
-    public function setVariantPrices(array $variantPrices)
-    {
-        $data = array();
-        foreach ($variantPrices as $variantPrice) {
-            $data[$variantPrice->getId()] = $variantPrice;
-        }
-        $this->variantPrices = $data;
         return $this;
     }
 

@@ -55,6 +55,11 @@ abstract class BaseCustomProduct extends BaseProduct implements CustomProductInt
      */
     protected $variants;
 
+    /**
+     * @var string
+     */
+    protected $variantGenerator = 'eo_ecommerce.variant_generator';
+
     public function __construct()
     {
         $this->prices   = new ArrayCollection();
@@ -123,9 +128,7 @@ abstract class BaseCustomProduct extends BaseProduct implements CustomProductInt
      */
     public function addPrice(PriceInterface $price)
     {
-        if (!$this->hasPrice($price)) {
-            $this->prices[] = $price;
-        }
+        $this->prices[] = $price;
         return $this;
     }
 

@@ -161,9 +161,7 @@ class BaseCart implements CartInterface
      */
     public function addItem(CartItemInterface $item)
     {
-        if ($this->hasItem($item) === FALSE) {
-            $this->items[] = $item;
-        }
+        $this->items[] = $item;
         return $this;
     }
 

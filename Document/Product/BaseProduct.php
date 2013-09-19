@@ -87,6 +87,20 @@ abstract class BaseProduct implements ProductInterface
     protected $availableAt;
 
     /**
+     * @var bool $isAvailableOnDemand
+     *
+     * @ODM\Field(name="isAvailableOnDemand", type="boolean")
+     */
+    protected $isAvailableOnDemand;
+
+    /**
+     * @var int $onHand
+     *
+     * @ODM\Field(name="onHand", type="int")
+     */
+    protected $onHand;
+
+    /**
      * @var date $createdAt
      *
      * @ODM\Field(name="createdAt", type="date")
@@ -304,6 +318,50 @@ abstract class BaseProduct implements ProductInterface
     public function getAvailableAt()
     {
         return $this->availableAt;
+    }
+
+    /**
+     * Simply checks if there any stock available.
+     * It should also return true for items available on demand.
+     *
+     * @return Boolean
+     */
+    public function isInStock()
+    {
+        if ($this->isAvailableOnDemand()) {
+            return true;
+        }
+    }
+
+    /**
+     * Is stockable available on demand?
+     *
+     * @return Boolean
+     */
+    public function isAvailableOnDemand()
+    {
+        return $this->isAvailableOnDemand;
+    }
+
+    /**
+     * Set stock on hand.
+     *
+     * @param int $onHand
+     */
+    public function setOnHand($onHand)
+    {
+        $this->onHand = $onHand;
+        return $this;
+    }
+
+    /**
+     * Get stock on hand.
+     *
+     * @return int
+     */
+    public function getOnHand()
+    {
+        return $this->onHand;
     }
 
     /**

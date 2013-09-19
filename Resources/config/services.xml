@@ -14,6 +14,8 @@
         <parameter key="eo_ecommerce.form.type.condition_choice.class">Eo\EcommerceBundle\Form\Type\ConditionChoiceType</parameter>
         <parameter key="eo_ecommerce.manager.class">Eo\EcommerceBundle\Manager\EcommerceManager</parameter>
         <parameter key="eo_ecommerce.cart_manager.class">Eo\EcommerceBundle\Manager\CartManager</parameter>
+        <parameter key="eo_ecommerce.inventory_checker.class">Eo\EcommerceBundle\Checker\InventoryChecker</parameter>
+        <parameter key="eo_ecommerce.twig.inventory_extension.class">Eo\EcommerceBundle\Twig\Extension\InventoryExtension</parameter>
         <parameter key="eo_ecommerce.twig.cart_extension.class">Eo\EcommerceBundle\Twig\Extension\CartExtension</parameter>
     </parameters>
 
@@ -24,17 +26,22 @@
         </service>
         <!-- Doctrine Listener -->
         <service id="eo_ecommerce.doctrine_listener" class="%eo_ecommerce.doctrine_listener.class%" public="false">
-            <argument type="service" id="eo_ecommerce.variant_generator"/>
+            <argument type="service" id="service_container"/>
             <tag name="doctrine_mongodb.odm.event_listener" event="prePersist" />
+            <tag name="doctrine_mongodb.odm.event_listener" event="postLoad" />
+        </service>
+        <!-- Inventory Checker -->
+        <service id="eo_ecommerce.inventory_checker" class="%eo_ecommerce.inventory_checker.class%">
+            <argument type="service" id="service_container"/>
+        </service>
+        <!-- Inventory Extension -->
+        <service id="eo_ecommerce.twig.inventory_extensions" class="%eo_ecommerce.twig.inventory_extension.class%">
+            <argument type="service" id="eo_ecommerce.inventory_checker"/>
+            <tag name="twig.extension" />
         </service>
         <!-- Price Resolver -->
         <service id="eo_ecommerce.price_resolver" class="%eo_ecommerce.price_resolver.class%">
             <argument type="service" id="service_container"/>
-        </service>
-        <!-- Price Resolver Listener -->
-        <service id="eo_ecommerce.price_resolver_listener" class="%eo_ecommerce.price_resolver_listener.class%" public="false">
-            <argument type="service" id="eo_ecommerce.price_resolver"/>
-            <tag name="doctrine_mongodb.odm.event_listener" event="postLoad" />
         </service>
         <!-- Condition Manager -->
         <service id="eo_ecommerce.condition_manager" class="%eo_ecommerce.condition_manager.class%">

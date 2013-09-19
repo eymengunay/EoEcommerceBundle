@@ -36,6 +36,11 @@ class PriceResolver implements PriceResolverInterface
     protected $resolvables = array();
 
     /**
+     * @var array
+     */
+    protected $minMax = array();
+
+    /**
      * Class constructor
      */
     public function __construct(ContainerInterface $container)
@@ -53,6 +58,18 @@ class PriceResolver implements PriceResolverInterface
     public function addResolvable(VariantInterface $product)
     {
         $this->resolvables[$product->getId()] = $product;
+        return $this;
+    }
+
+    /**
+     * Add resolvable
+     *
+     * @param  CustomProductInterface $product
+     * @return self
+     */
+    public function addMinMax(CustomProductInterface $product)
+    {
+        $this->minMax[$product->getId()] = $product;
         return $this;
     }
 
@@ -95,7 +112,6 @@ class PriceResolver implements PriceResolverInterface
      */
     public function resolveMinMax(CustomProductInterface $product)
     {
-        //return array(null, null);
         $min = null;
         $max = null;
         // Loop through product variants

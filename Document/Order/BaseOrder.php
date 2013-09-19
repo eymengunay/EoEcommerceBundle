@@ -193,9 +193,7 @@ class BaseOrder implements OrderInterface
      */
     public function addItem(OrderItemInterface $item)
     {
-        if (!$this->hasItem($item)) {
-            $this->items->add($item);
-        }
+        $this->items->add($item);
         return $this;
     }
 

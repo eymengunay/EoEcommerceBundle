@@ -121,9 +121,7 @@ class BaseVariant extends BaseCustomProduct implements VariantInterface
      */
     public function addOptionValue(OptionValueInterface $optionValue)
     {
-        if (!$this->hasOptionValue($optionValue)) {
-            $this->optionValues->add($optionValue);
-        }
+        $this->optionValues->add($optionValue);
         return $this;
     }
 

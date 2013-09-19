@@ -64,7 +64,7 @@ class ConditionManager implements ConditionManagerInterface
         $repo = $dm->getRepository($this->config['priceConditions']['class']);
         $qb = $repo->createQueryBuilder();
         $priceConditions = $qb
-            ->field("variants.id")->equals($product->getId())
+            ->field('variants.$id')->equals($product->getId())
             ->getQuery()
             ->execute()
         ;
