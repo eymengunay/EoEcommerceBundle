@@ -125,6 +125,6 @@ class CartExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'cart_extension';
+        return 'eo_cart_extension';
     }
 }
