@@ -13,8 +13,7 @@
     ],
     "require": {
         "symfony/symfony": ">=2.1,<2.4-dev",
-        "doctrine/mongodb-odm-bundle": ">=2.1.0-dev",
-        "payum/payum-bundle": ">=0.4"
+        "doctrine/mongodb-odm-bundle": ">=2.1.0-dev"
     },
     "require-dev": {
         "eo/symfony-test-edition": "dev-master"
